@@ -2,3 +2,4 @@ res/BULLETINS/
 *.pyc
 .vscode/
 BULLETINS
+/output.xml
