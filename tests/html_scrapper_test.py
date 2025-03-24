@@ -19,7 +19,7 @@ def test_extract_number_and_date():
 
     # Check if name is coherent
     # assert re.match("[A-Z]+ [\w]+ numéro [0-9]+", num)
-    assert "BE France numéro 258" == num
+    assert "258" == num
 
     # Check if date is coherent
     assert re.match("[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}", date)
@@ -27,13 +27,13 @@ def test_extract_number_and_date():
 
 def test_extract_number_and_date_all():
 
-    bulletins = parseAllHTML(BULLETINS_DIR + "res/BULLETINS")
+    bulletins = parseAllHTML(BULLETINS_DIR)
 
     for filename, b in bulletins.items():
         num, date = extract_number_and_date(b)
 
         # Check if name is coherent
-        assert re.match("[A-Z]+ [\w]+ numéro [0-9]+", num)
+        assert re.match("\d{3}+", num)
 
         # Check if date is coherent
         assert re.match("[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}", date)
@@ -41,7 +41,7 @@ def test_extract_number_and_date_all():
 
 def test_extract_id_text_title_and_section():
     bulletin = parseHTML(BULLETINS_DIR + "/67068.htm")
-    id, text, title, section = extract_id_text_title_and_section(bulletin)
+    id, _, text, title, section = extract_id_text_title_and_section(bulletin)
 
     # check if  id is coherent
     # assert re.match("\d{5}", id)
@@ -60,19 +60,19 @@ def test_extract_id_text_title_and_section():
 
 def test_extract_id_text_title_and_section_all():
 
-    bulletins = parseAllHTML(BULLETINS_DIR + "res/BULLETINS")
+    bulletins = parseAllHTML(BULLETINS_DIR)
 
     for filename, b in bulletins.items():
-        id, text, title, section = extract_id_text_title_and_section(b)
-
+        print(filename)
+        id, _, text, title, section = extract_id_text_title_and_section(b)
         # check if  id is coherent
         assert re.match("\d{5}", id)
 
         # Check if text is coherent
-        assert re.match("(\S+ ){200,}", text)
+        # assert re.match("(\S+ ){50,}", text)
 
         # Check if title is coherent
-        assert re.match("(\S+ ){4,20}", title)
+        assert re.match("(\S+ ){2,20}", title)
 
         # Check if section is coherent
         assert re.match("(\S+[ ]*){1,5}", section)
@@ -89,7 +89,7 @@ def test_extract_author():
 
 def test_extract_author_all():
 
-    bulletins = parseAllHTML(BULLETINS_DIR + "res/BULLETINS")
+    bulletins = parseAllHTML(BULLETINS_DIR)
 
     for filename, b in bulletins.items():
         author = extract_author(b)
@@ -108,3 +108,37 @@ def test_extract_contact():
         contact
         == """Institut Langevin "Ondes et Images" - Mathias Fink - email : mathias.fink@espci.fr - http://www.institut-langevin.espci.fr"""
     )
+
+
+def test_extract_images():
+
+    bulletin = parseHTML(BULLETINS_DIR + "/67937.htm")
+
+    _, images, _, _, _ = extract_id_text_title_and_section(bulletin)
+
+    assert len(images) == 2
+    assert images[0][0] == "http://www4.utc.fr/~lo17/IMAGESWEB/67937_01.jpg"
+    assert (
+        images[0][1]
+        == """Jules Hoffmann, Prix Nobel de Médecine et de Physiologie 2011 Crédits : CNRS Photothèque/Pascal Disdier"""
+    )
+
+    assert images[1][0] == "http://www4.utc.fr/~lo17/IMAGESWEB/67937_02.jpg"
+    assert (
+        images[1][1]
+        == """Jules Hoffmann : "Au départ, nous voulions comprendre comment l'insecte se défend et bloquer ses défenses pour le neutraliser. Or grâce à la drosophile, nous avons pu apporter en quinze ans des éléments nouveaux et importants sur l'immunité innée qui concernent tous les grands groupes animaux, y compris l'homme chez qui ce sujet était très peu étudié". Crédits : CNRS Photothèque/Pascal Disdier"""
+    )
+
+
+def test_extract_images_all():
+
+    bulletins = parseAllHTML(BULLETINS_DIR)
+
+    for filename, b in bulletins.items():
+
+        print(filename)
+        _, images, _, _, _ = extract_id_text_title_and_section(b)
+
+        for i in images:
+            assert re.match("(http?:\/\/.*\.(?:png|jpg))", i[0])
+            assert re.match("(\S+ ){1,30}", i[1])

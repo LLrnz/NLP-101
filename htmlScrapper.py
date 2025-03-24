@@ -3,6 +3,8 @@ from typing import Dict, List, Tuple
 from bs4 import BeautifulSoup
 import glob
 
+from scrapper_types import Image
+
 NODATA = "NO_DATA"
 
 
@@ -41,7 +43,7 @@ def extract_number_and_date(select: BeautifulSoup) -> Tuple[str, str]:
         sib = data.findNextSibling()
 
         # extracting num and date from td text with regex
-        num = re.search("[0-9]{0,4}", sib.text)[0]
+        num = re.search("\d{3}", sib.text)[0]
         date = re.search("[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}", sib.text)[0]
 
     return (num, date)
@@ -49,20 +51,27 @@ def extract_number_and_date(select: BeautifulSoup) -> Tuple[str, str]:
 
 def extract_id_text_title_and_section(
     select: BeautifulSoup,
-) -> Tuple[str, str, str, str]:
+) -> Tuple[str, List[Image], str, str, str]:
     text = ""
     title = NODATA
     section = NODATA
     id = NODATA
+    text_node = None
+    images = []
 
     # text is define by having more than 20 words
-    texts = select.find_all("span", string=re.compile("(\S+ ){10,}"))
-
-    title = texts[0]
+    max_word_count = 0
+    for element in select.find_all(["span"]):
+        texti = element.get_text(strip=True)
+        # Count words (simple space-separated words)
+        word_count = len(re.findall(r"\S+", texti))
+        if word_count >= max_word_count:
+            text_node = element
+            max_word_count = word_count
 
     # going through the parents until td contining all needed data is found
-    if title is not None:
-        data = title.find_parent()
+    if text_node is not None:
+        data = text_node.find_parent()
         while data.name != "td":
             data = data.find_parent()
 
@@ -72,10 +81,26 @@ def extract_id_text_title_and_section(
         id = data.contents[3].contents[1].text
         id = re.search("\d{5}", id).group(0)
 
-        for c in data.contents[5].children:
+        for c in data.contents[5:]:
             text += c.text
 
-    return (id, text, title, section)
+        # images
+        for child in data.contents:
+            if child.name == "div":
+                url = ""
+                url = child.contents[0].get("src")
+                if url == None:
+                    url = child.contents[0].get("href")
+                caption = ""
+                for subchild in child.contents:
+                    if subchild.name == "span":
+                        caption += subchild.text + " "
+
+                caption = caption[:-1]
+                caption = re.sub(r"\n", "", caption)
+                images.append([url, caption])
+
+    return (id, images, text, title, section)
 
 
 def extract_author(select: BeautifulSoup) -> str:
