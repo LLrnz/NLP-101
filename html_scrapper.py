@@ -81,8 +81,13 @@ def extract_id_text_title_and_section(
         id = data.contents[3].contents[1].text
         id = re.search("\d{5}", id).group(0)
 
-        for c in data.contents[5:]:
-            text += c.text
+        # for c in data.contents[5:]:
+        #     textnode = c.textnode
+        #     text += c.text + " "
+
+        while text_node.next != None:
+            text_node = text_node.next
+            text += text_node.text + " "
 
         # images
         for child in data.contents:
