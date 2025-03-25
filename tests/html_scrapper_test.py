@@ -1,5 +1,5 @@
 import re
-from htmlScrapper import (
+from html_scrapper import (
     extract_author,
     extract_contact,
     extract_number_and_date,
