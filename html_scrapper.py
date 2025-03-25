@@ -85,9 +85,8 @@ def extract_id_text_title_and_section(
         #     textnode = c.textnode
         #     text += c.text + " "
 
-        while text_node.next != None:
-            text_node = text_node.next
-            text += text_node.text + " "
+        for next in text_node.children:
+            text += next.text + " "
 
         # images
         for child in data.contents:

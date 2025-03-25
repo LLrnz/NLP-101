@@ -48,3 +48,15 @@ def calculate_idf(wordDocId: Set[Tuple[str, int]]) -> str:
 write_on_output_file(
     calculate_idf(read_word_docid_file("output/test2.txt")), "output/test3.csv"
 )
+
+
+def file_to_dict(filepath: str) -> Dict[str, float]:
+    idf = {}
+
+    with open(filepath, encoding="utf-8", newline="\n") as file:
+        reader = csv.reader(file, delimiter="	")
+        for row in reader:
+            word, idf = row
+            idf[word] = idf
+
+    return idf
