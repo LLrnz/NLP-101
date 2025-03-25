@@ -1,5 +1,3 @@
-
-
 # dictionary = {'22': '23',
 #                'CNRS': 'CAC40',
 #                'sa': 'son',
@@ -15,6 +13,7 @@ def substitute_words(dictionary, text):
     for key, value in dictionary.items():
         text = text.replace(key, value)
     return text
+
 
 # print("Text intial: ", text)
 # print("Teste apres remplacement:\n")

@@ -31,6 +31,7 @@ def write_on_output_file(corpus: str, outputFile: str):
 
 
 def clean_text(text: str) -> str:
+    text = text.lower()
     text = re.sub(r"[^\w\s']", "", text)
     text = text.replace("'", "' ")
     return text
