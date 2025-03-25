@@ -1,6 +1,8 @@
 import re
 from bs4 import BeautifulSoup
 
+from file_handling import write_on_output_file
+
 
 def read_corpus(corpusXMLFile: str) -> BeautifulSoup:
     with open(corpusXMLFile) as fp:
@@ -20,19 +22,18 @@ def segment_corpus(corpus: BeautifulSoup) -> str:
         texts = clean_text(texts)
 
         for word in texts.split(" "):
-            segementedCorpus += word + "	" + filename + "\n"
+            if word != "":
+                segementedCorpus += word + "	" + filename + "\n"
 
     return segementedCorpus
 
 
-def write_on_output_file(corpus: str, outputFile: str):
-    with open(outputFile, "w", encoding="utf-8") as f:
-        f.write(corpus)
-
-
 def clean_text(text: str) -> str:
-    text = re.sub(r"[^\w\s']", "", text)
+    text = text.lower()
     text = text.replace("'", "' ")
+    text = re.sub(r"[\n-]", " ", text)
+    text = re.sub(r"[^\w\s']", " ", text)
+
     return text
 
 

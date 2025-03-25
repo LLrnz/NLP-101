@@ -1,4 +1,4 @@
-from GenerateXml import generateXml
+from generate_xml import generateXml
 from genrate_corpus_data import generate_corpus_data
 
 
