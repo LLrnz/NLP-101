@@ -84,7 +84,10 @@ def generateXml(corpus_data, outputFile):
 
         # Prise en compte des différentes images
         for key, value in bullentin_data["imageDoc"].items():
-            image_elem = ET.SubElement(images_elem, "image")
+            image_elem = ET.SubElement(images_elem, "urlImage")
+            image_elem.text = key
+
+            image_elem = ET.SubElement(images_elem, "legendeImage")
             image_elem.text = value
 
         contact_elem = ET.SubElement(bulletin, "contact")

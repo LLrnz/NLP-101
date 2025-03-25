@@ -29,6 +29,7 @@ def generate_corpus_data(bulletinDir: str):
         imagedict = {}
         for i in images:
             imagedict[i[0]] = i[1]
+
         bulletinData["imageDoc"] = imagedict
         bulletinData["contactDoc"] = contact
 
