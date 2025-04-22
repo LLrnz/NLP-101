@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from collections import Counter
 
 def  coefficient_tf(segmentedCorpusFile: str) -> Counter:
+   # Fonction qui calcule le coefficient tf pour chaque mot dans le corpus segmenté
    result = []
    with open(segmentedCorpusFile , 'r' , encoding='utf-8') as fp:
         word_counts = Counter()
