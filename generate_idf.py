@@ -4,6 +4,8 @@ from typing import Counter, Dict, List, Set, Tuple
 
 from file_handling import write_on_output_file
 
+IdfDict = Dict[str, float]
+
 
 def read_is_word_freq_dict(filepath: str) -> Dict[int, Dict[str, int]]:
     freqDict = {}
@@ -50,13 +52,13 @@ write_on_output_file(
 )
 
 
-def file_to_dict(filepath: str) -> Dict[str, float]:
+def file_to_dict(filepath: str) -> IdfDict:
     idf = {}
 
     with open(filepath, encoding="utf-8", newline="\n") as file:
-        reader = csv.reader(file, delimiter="	")
+        reader = csv.reader(file, delimiter=" ")
         for row in reader:
-            word, idf = row
-            idf[word] = idf
+            word, w_idf = row
+            idf[word] = float(w_idf)
 
     return idf
