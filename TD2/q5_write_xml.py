@@ -52,6 +52,7 @@ def prettify(elem):
     return reparsed.toprettyxml(indent="  ")
 
 
+# TODO formaliser type entrée
 def generateXml(corpus_data, outputFile):
     """Fonction de génération du fichier XML à partir des données du corpus."""
     corpus = ET.Element("corpus")

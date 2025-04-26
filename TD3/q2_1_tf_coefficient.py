@@ -5,6 +5,8 @@ from collections import Counter
 
 TfEntry = Tuple[int, str, int]
 
+"""Calcule le tf de chaque terme dans chaque doc depuis le fichier de tokens"""
+
 
 def coefficient_tf(segmentedCorpusFile: str) -> Counter:
     result = []
@@ -27,8 +29,8 @@ def write_coefficient_tf(tf_counts: Counter, outputFile: str):
             f.write(f"{id_doc}\t{word}\t{count}\n")
 
 
-segmentedCorpusFile = "output/test2.txt"
-outputFile = "output/resulat_tf.txt"
+segmentedCorpusFile = "output/tokens.csv"
+outputFile = "output/resulat_tf.csv"
 
 tf_counts = coefficient_tf(segmentedCorpusFile)
 write_coefficient_tf(tf_counts, outputFile)

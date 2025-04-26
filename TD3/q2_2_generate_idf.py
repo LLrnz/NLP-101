@@ -6,6 +6,8 @@ from file_handling import write_on_output_file
 
 IdfDict = Dict[str, float]
 
+"""Calcul l'didf depuis le fichier de tokens"""
+
 
 def read_is_word_freq_dict(filepath: str) -> Dict[int, Dict[str, int]]:
     freqDict = {}
@@ -48,7 +50,7 @@ def calculate_idf(wordDocId: Set[Tuple[str, int]]) -> str:
 
 
 write_on_output_file(
-    calculate_idf(read_word_docid_file("output/test2.txt")), "output/test3.csv"
+    calculate_idf(read_word_docid_file("output/tokens.csv")), "output/resultat_idf.csv"
 )
 
 

@@ -3,9 +3,13 @@ from typing import Dict, List, Tuple
 from bs4 import BeautifulSoup
 import glob
 
-from scrapper_types import Image
+from TD2.q3_scrapper_types import Image
 
 NODATA = "NO_DATA"
+
+
+"""Q3. Récupères les infos des bulleteins html et les transforme en XML
+"""
 
 
 def parseHTML(path: str) -> BeautifulSoup:

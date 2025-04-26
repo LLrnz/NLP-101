@@ -1,6 +1,6 @@
 from typing import List, Tuple
-import generate_idf as idf
-import tf_coefficient as tf
+import TD3.q2_2_generate_idf as idf
+import TD3.q2_1_tf_coefficient as tf
 
 TfIdf = Tuple[int, str, float]
 
@@ -34,6 +34,6 @@ def write_to_file(tfidf: List[TfIdf], outputfile: str):
 
 
 write_to_file(
-    generate_tf_idf(read_files("output/resulat_tf.txt", "output/test3.csv")),
+    generate_tf_idf(read_files("output/resulat_tf.csv", "output/tf_idf.csv")),
     "tfidf.csv",
 )

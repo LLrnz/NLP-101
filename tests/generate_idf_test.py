@@ -1,4 +1,4 @@
-from generate_idf import calculate_idf
+from TD3.q2_2_generate_idf import calculate_idf
 
 
 def test_generate_idf():
