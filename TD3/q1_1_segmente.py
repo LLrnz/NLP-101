@@ -1,7 +1,8 @@
 import re
+from typing import List
 from bs4 import BeautifulSoup
 
-from ... import file_handling as file
+import utils.file_handling as file
 import utils.corpus_types as type
 import utils.paths as path
 
@@ -21,9 +22,10 @@ def segment_corpus(corpus: BeautifulSoup) -> type.TokenizedCorpus:
         token_list.append({})
 
         for category in bulletin.children:
-            key = category.name
-            text = clean_text(category.text)
-            token_list[i][key] = split_text(text)
+            if category is not None:
+                key = category.name
+                text = clean_text(category.text)
+                token_list[i][key] = split_text(text)
 
     return token_list
 
@@ -33,6 +35,7 @@ def split_text(text: str) -> type.Tokens:
     for word in text.split(" "):
         if word != "":
             token_list.append(word)
+    return token_list
 
 
 def clean_text(text: str) -> str:
@@ -48,18 +51,21 @@ def tokens_to_file(toknized_corpus: type.TokenizedCorpus) -> str:
     segmented_corpus = ""
 
     for bulletin in toknized_corpus:
-        for _, tokens in bulletin:
+        fichier = bulletin["fichier"][0]
+        for _, tokens in bulletin.items():
             for token in tokens:
-                segementedCorpus += token + "	" + bulletin["fichier"] + "\n"
+                segmented_corpus += token + "	" + fichier + "\n"
 
     return segmented_corpus
 
 
+def unsplit(text: List[str]) -> str:
+    return " ".join(text)
+
+
 def detokenize(toknized_corpus: type.TokenizedCorpus) -> type.Corpus:
-    pass  # TODO
+    for bulletin in toknized_corpus:
+        for category, tokens in bulletin.items():
+            bulletin[category] = unsplit(tokens)
 
-
-# fichier de sortie : tokens.csv
-file.write_on_output_file(
-    tokens_to_file(segment_corpus(read_corpus(path.XML_CORPUS))[0], path.TOKENS)
-)
+    return toknized_corpus

@@ -1,5 +1,6 @@
 from TD2.q5_write_xml import generateXml
 from TD2.q5_genrate_corpus_data import generate_corpus_data
+from utils.file_handling import write_on_output_file
 import utils.paths as path
 
 """Q5. Prends les données scrappées sort un XML du coprus structuré"""
@@ -7,7 +8,7 @@ import utils.paths as path
 
 def make_corpus(bulletinsDir: str, outputFile: str):
     corpuses = generate_corpus_data(bulletinsDir)
-    generateXml(corpuses, outputFile)
+    output = generateXml(corpuses, outputFile)
 
 
 # création du fichier corpus

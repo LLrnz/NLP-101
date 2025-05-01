@@ -32,9 +32,3 @@ def write_to_file(tfidf: List[type.TokenTfIdf], outputfile: str):
         for term in tfidf:
             id_doc, word, tfifd = term
             f.write(f"{id_doc}\t{word}\t{tfifd}\n")
-
-
-write_to_file(
-    generate_tf_idf(read_files(path.ALL_TF, path.ALL_IDF)),
-    path.ALL_TF_IDF,
-)

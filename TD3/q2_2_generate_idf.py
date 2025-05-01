@@ -60,6 +60,3 @@ def file_to_dict(filepath: str) -> type.IdfDict:
             idf[word] = float(w_idf)
 
     return idf
-
-
-write_on_output_file(calculate_idf(read_word_docid_file(path.TOKENS)), path.ALL_IDF)

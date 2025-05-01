@@ -39,7 +39,3 @@ def read_file(filepath: str) -> type.FreqList:
             res.append((id_doc, word, int(tf)))
 
     return res
-
-
-tf_counts = coefficient_tf(path.TOKENS)
-write_coefficient_tf(tf_counts, path.ALL_TF)

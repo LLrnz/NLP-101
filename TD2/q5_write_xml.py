@@ -51,10 +51,10 @@ def prettify(elem):
     """Fonction d'indentation du fichier XML."""
     rough_string = ET.tostring(elem, encoding="utf-8")
     reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="  ")
+    return reparsed  # .toprettyxml(indent="  ")
 
 
-def generateXml(corpus_data: type.corpus, outputFile: str):
+def generateXml(corpus_data: type.Corpus, outputFile: str):
     """Fonction de génération du fichier XML à partir des données du corpus."""
     corpus = ET.Element("corpus")
 
@@ -62,30 +62,30 @@ def generateXml(corpus_data: type.corpus, outputFile: str):
         bulletin = ET.SubElement(corpus, "bulletin")
 
         fichier = ET.SubElement(bulletin, "fichier")
-        fichier.text = bullentin_data["nameDoc"]
+        fichier.text = bullentin_data["fichier"]
 
         numero = ET.SubElement(bulletin, "numero")
-        numero.text = bullentin_data["numberBulletin"]
+        numero.text = bullentin_data["numero"]
 
         date_elem = ET.SubElement(bulletin, "date")
-        date_elem.text = bullentin_data["dateBulletin"]
+        date_elem.text = bullentin_data["date"]
 
         rubrique_elem = ET.SubElement(bulletin, "rubrique")
-        rubrique_elem.text = bullentin_data["rubriqueDoc"]
+        rubrique_elem.text = bullentin_data["rubrique"]
 
         titre = ET.SubElement(bulletin, "titre")
-        titre.text = bullentin_data["TitleDoc"]
+        titre.text = bullentin_data["titre"]
 
         auteur = ET.SubElement(bulletin, "auteur")
-        auteur.text = bullentin_data["autorDoc"]
+        auteur.text = bullentin_data["auteur"]
 
         texte = ET.SubElement(bulletin, "texte")
-        texte.text = bullentin_data["textDoc"]
+        texte.text = bullentin_data["texte"]
 
         images_elem = ET.SubElement(bulletin, "images")
 
         # Prise en compte des différentes images
-        for key, value in bullentin_data["imageDoc"].items():
+        for key, value in bullentin_data["images"].items():
             image = ET.SubElement(images_elem, "image")
             image_elem = ET.SubElement(image, "urlImage")
             image_elem.text = key
@@ -93,8 +93,49 @@ def generateXml(corpus_data: type.corpus, outputFile: str):
             image_elem.text = value
 
         contact_elem = ET.SubElement(bulletin, "contact")
-        contact_elem.text = bullentin_data["contactDoc"]
+        contact_elem.text = bullentin_data["contact"]
 
-    xml_str = prettify(corpus)
-    with open(outputFile, "w", encoding="utf-8") as f:
-        f.write(xml_str)
+    # xml_str = prettify(corpus)
+
+    with open(outputFile, "wb") as f:
+        ET.ElementTree(corpus).write(f, encoding="utf-8")
+
+
+def generate_XML_no_images(corpus_data: type.Corpus, outputFile: str):
+    """Fonction de génération du fichier XML à partir des données du corpus."""
+    corpus = ET.Element("corpus")
+
+    for bullentin_data in corpus_data:
+        bulletin = ET.SubElement(corpus, "bulletin")
+
+        fichier = ET.SubElement(bulletin, "fichier")
+        fichier.text = bullentin_data["fichier"]
+
+        numero = ET.SubElement(bulletin, "numero")
+        numero.text = bullentin_data["numero"]
+
+        date_elem = ET.SubElement(bulletin, "date")
+        date_elem.text = bullentin_data["date"]
+
+        rubrique_elem = ET.SubElement(bulletin, "rubrique")
+        rubrique_elem.text = bullentin_data["rubrique"]
+
+        titre = ET.SubElement(bulletin, "titre")
+        titre.text = bullentin_data["titre"]
+
+        auteur = ET.SubElement(bulletin, "auteur")
+        auteur.text = bullentin_data["auteur"]
+
+        texte = ET.SubElement(bulletin, "texte")
+        texte.text = bullentin_data["texte"]
+
+        images_elem = ET.SubElement(bulletin, "images")
+        images_elem.text = bullentin_data["images"]
+
+        contact_elem = ET.SubElement(bulletin, "contact")
+        contact_elem.text = bullentin_data["contact"]
+
+    # xml_str = prettify(corpus)
+
+    with open(outputFile, "wb") as f:
+        ET.ElementTree(corpus).write(f, encoding="utf-8")

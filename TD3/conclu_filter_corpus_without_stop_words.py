@@ -2,10 +2,12 @@ import csv
 import xml.etree.ElementTree as ET
 from typing import Dict, List
 
-from file_handling import write_on_output_file
-from TD2.q5_write_xml import prettify
-from TD3.q1_1_segmente import read_corpus, segment_corpus
+from utils.file_handling import write_on_output_file
+from TD2.q5_write_xml import generate_XML_no_images, generateXml, prettify
+from TD3.q1_1_segmente import detokenize, read_corpus, segment_corpus
 from TD3.q1_2_substitue import substitute_words
+
+import utils.corpus_types as type
 
 """Forme le dico stop words (avec seuil depuis tf_idf.csv), filtre le corpus dans filtered_corpus.xml"""
 
@@ -23,8 +25,8 @@ def make_stop_word_dictionnary(tfidf_file: str, threshold: float) -> Dict[str, s
 
 # TODO formaliser strucutre données tokens
 def remove_stop_word(
-    tokenized_corpus: List[Dict[str, List[str]]], stopwords: List[str]
-) -> Dict[str, List[str]]:
+    tokenized_corpus: type.TokenizedCorpus, stopwords: List[str]
+) -> type.TokenizedCorpus:
     new_corpus = []
 
     for i, b in enumerate(tokenized_corpus):
@@ -37,29 +39,6 @@ def remove_stop_word(
     return new_corpus
 
 
-def reform_corpus(tokenized_corpus: List[Dict[str, List[str]]]) -> str:
-
-    corpus = ET.Element("corpus")
-
-    for bullentin_data in tokenized_corpus:
-        bulletin = ET.SubElement(corpus, "bulletin")
-
-        titre = ET.SubElement(bulletin, "titre")
-        titre.text = bullentin_data["titre"]
-
-        texte = ET.SubElement(bulletin, "texte")
-        texte.text = bullentin_data["texte"]
-
-    # xml_str = prettify(corpus)
-    return corpus.text
-
-
-write_on_output_file(
-    reform_corpus(
-        remove_stop_word(
-            segment_corpus(read_corpus("output/corpus.xml"))[1],
-            make_stop_word_dictionnary("output/tf_idf.csv", 1.2),
-        )
-    ),
-    "output/filtered_corpus.xml",
-)
+def reform_corpus(tokenized_corpus: type.TokenizedCorpus, outputfile: str) -> str:
+    corpus = detokenize(tokenized_corpus)
+    generate_XML_no_images(corpus, outputfile)
