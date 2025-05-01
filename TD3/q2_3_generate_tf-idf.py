@@ -2,19 +2,19 @@ from typing import List, Tuple
 import TD3.q2_2_generate_idf as idf
 import TD3.q2_1_tf_coefficient as tf
 
-TfIdf = Tuple[int, str, float]
-
-TfAndIdf = Tuple[idf.IdfDict, List[tf.TfEntry]]
+import corpus_types as type
 
 
-def read_files(tf_file: str, idf_file: str) -> TfAndIdf:
+def read_files(tf_file: str, idf_file: str) -> Tuple[type.IdfDict, type.FreqList]:
     idf_dict = idf.file_to_dict(idf_file)
     tf_list = tf.read_file(tf_file)
 
     return idf_dict, tf_list
 
 
-def generate_tf_idf(parameters: TfAndIdf) -> List[TfIdf]:
+def generate_tf_idf(
+    parameters: Tuple[type.IdfDict, type.FreqList],
+) -> List[type.TokenTfIdf]:
     idf_dict, tf_list = parameters
     res = []
 
@@ -26,7 +26,7 @@ def generate_tf_idf(parameters: TfAndIdf) -> List[TfIdf]:
     return res
 
 
-def write_to_file(tfidf: List[TfIdf], outputfile: str):
+def write_to_file(tfidf: List[type.TokenTfIdf], outputfile: str):
     with open(outputfile, "w", encoding="utf-8") as f:
         for term in tfidf:
             id_doc, word, tfifd = term

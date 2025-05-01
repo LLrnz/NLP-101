@@ -1,15 +1,15 @@
 import csv
 import math
-from typing import Counter, Dict, List, Set, Tuple
+from typing import Counter
 
 from file_handling import write_on_output_file
+import corpus_types as type
 
-IdfDict = Dict[str, float]
 
 """Calcul l'didf depuis le fichier de tokens"""
 
 
-def read_is_word_freq_dict(filepath: str) -> Dict[int, Dict[str, int]]:
+def read_is_word_freq_dict(filepath: str) -> type.TokenFreqDictByDocs:
     freqDict = {}
 
     with open(filepath, encoding="utf-8", newline="\n") as file:
@@ -22,7 +22,7 @@ def read_is_word_freq_dict(filepath: str) -> Dict[int, Dict[str, int]]:
     return freqDict
 
 
-def read_word_docid_file(filepath: str) -> Set[Tuple[str, int]]:
+def read_word_docid_file(filepath: str) -> type.TokensAndDocIDsSet:
     wordDocID = []
     with open(filepath, encoding="utf-8", newline="\n") as file:
         reader = csv.reader(file, delimiter="	")
@@ -33,7 +33,7 @@ def read_word_docid_file(filepath: str) -> Set[Tuple[str, int]]:
         return set(wordDocID)
 
 
-def calculate_idf(wordDocId: Set[Tuple[str, int]]) -> str:
+def calculate_idf(wordDocId: type.TokensAndDocIDsSet) -> str:
     res = ""
     docCnt = Counter(tup[1] for tup in wordDocId)
     nbDocs = len(docCnt)
@@ -54,7 +54,7 @@ write_on_output_file(
 )
 
 
-def file_to_dict(filepath: str) -> IdfDict:
+def file_to_dict(filepath: str) -> type.IdfDict:
     idf = {}
 
     with open(filepath, encoding="utf-8", newline="\n") as file:

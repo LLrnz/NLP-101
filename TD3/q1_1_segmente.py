@@ -3,6 +3,7 @@ from typing import Dict, List, Tuple
 from bs4 import BeautifulSoup
 
 from file_handling import write_on_output_file
+import corpus_types as type
 
 """Tokénisation"""
 
@@ -13,12 +14,14 @@ def read_corpus(corpusXMLFile: str) -> BeautifulSoup:
     return corpus
 
 
-def segment_corpus(corpus: BeautifulSoup) -> Tuple[str, List[Dict[str, List[str]]]]:
+def segment_corpus(corpus: BeautifulSoup) -> type.TokenizedCorpus:
     segementedCorpus = ""
     token_list = []
     for i, bulletin in enumerate(corpus.find_all("bulletin")):
         token_list.append({})
         filename = bulletin.find("fichier").text
+
+        # TODO tokenizer tout le corpus
 
         texts = bulletin.find("titre").text
         token_list[i]["titre"] = []
@@ -46,6 +49,10 @@ def clean_text(text: str) -> str:
     text = re.sub(r"[^\w\s']", " ", text)
 
     return text
+
+
+def detokenize(toknized_corpus: type.TokenizedCorpus) -> type.Corpus:
+    pass  # TODO
 
 
 # fichier de sortie : tokens.csv
