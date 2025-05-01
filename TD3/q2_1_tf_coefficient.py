@@ -2,8 +2,8 @@ import csv
 from typing import List, Tuple
 from bs4 import BeautifulSoup
 from collections import Counter
-import corpus_types as type
-
+import utils.corpus_types as type
+import utils.paths as path
 
 """Calcule le tf de chaque terme dans chaque doc depuis le fichier de tokens"""
 
@@ -41,8 +41,5 @@ def read_file(filepath: str) -> type.FreqList:
     return res
 
 
-segmentedCorpusFile = "output/tokens.csv"
-outputFile = "output/resulat_tf.csv"
-
-tf_counts = coefficient_tf(segmentedCorpusFile)
-write_coefficient_tf(tf_counts, outputFile)
+tf_counts = coefficient_tf(path.TOKENS)
+write_coefficient_tf(tf_counts, path.ALL_TF)

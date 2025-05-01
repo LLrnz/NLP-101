@@ -5,10 +5,11 @@ from TD2.q3_html_scrapper import (
     extract_number_and_date,
     parseAllHTML,
 )
+import utils.corpus_types as type
 
 
 # TODO formaliser type de sortie
-def generate_corpus_data(bulletinDir: str):
+def generate_corpus_data(bulletinDir: str) -> type.corpus:
     bulletins = parseAllHTML(bulletinDir)
     corpus = []
 
@@ -19,20 +20,20 @@ def generate_corpus_data(bulletinDir: str):
         contact = extract_contact(b)
         num, date = extract_number_and_date(b)
 
-        bulletinData["nameDoc"] = id
-        bulletinData["numberBulletin"] = num
-        bulletinData["dateBulletin"] = date
-        bulletinData["rubriqueDoc"] = section
-        bulletinData["TitleDoc"] = title
-        bulletinData["autorDoc"] = author
-        bulletinData["textDoc"] = text
+        bulletinData["fichier"] = id
+        bulletinData["numero"] = num
+        bulletinData["date"] = date
+        bulletinData["rubrique"] = section
+        bulletinData["titre"] = title
+        bulletinData["auteur"] = author
+        bulletinData["texte"] = text
 
         imagedict = {}
         for i in images:
             imagedict[i[0]] = i[1]
 
-        bulletinData["imageDoc"] = imagedict
-        bulletinData["contactDoc"] = contact
+        bulletinData["images"] = imagedict
+        bulletinData["contact"] = contact
 
         corpus.append(bulletinData)
 

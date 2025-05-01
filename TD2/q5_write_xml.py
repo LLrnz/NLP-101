@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
-import corpus_types as type
+import utils.corpus_types as type
 
 # Corpus de test comportant plusieurs bulletins
 corpus_data = [
@@ -54,7 +54,6 @@ def prettify(elem):
     return reparsed.toprettyxml(indent="  ")
 
 
-# TODO formaliser type entrée
 def generateXml(corpus_data: type.corpus, outputFile: str):
     """Fonction de génération du fichier XML à partir des données du corpus."""
     corpus = ET.Element("corpus")

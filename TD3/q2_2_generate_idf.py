@@ -2,8 +2,9 @@ import csv
 import math
 from typing import Counter
 
-from file_handling import write_on_output_file
-import corpus_types as type
+from utils.file_handling import write_on_output_file
+import utils.corpus_types as type
+import utils.paths as path
 
 
 """Calcul l'didf depuis le fichier de tokens"""
@@ -49,11 +50,6 @@ def calculate_idf(wordDocId: type.TokensAndDocIDsSet) -> str:
     return res
 
 
-write_on_output_file(
-    calculate_idf(read_word_docid_file("output/tokens.csv")), "output/resultat_idf.csv"
-)
-
-
 def file_to_dict(filepath: str) -> type.IdfDict:
     idf = {}
 
@@ -64,3 +60,6 @@ def file_to_dict(filepath: str) -> type.IdfDict:
             idf[word] = float(w_idf)
 
     return idf
+
+
+write_on_output_file(calculate_idf(read_word_docid_file(path.TOKENS)), path.ALL_IDF)

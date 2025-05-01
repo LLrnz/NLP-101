@@ -2,7 +2,8 @@ from typing import List, Tuple
 import TD3.q2_2_generate_idf as idf
 import TD3.q2_1_tf_coefficient as tf
 
-import corpus_types as type
+import utils.corpus_types as type
+import utils.paths as path
 
 
 def read_files(tf_file: str, idf_file: str) -> Tuple[type.IdfDict, type.FreqList]:
@@ -34,6 +35,6 @@ def write_to_file(tfidf: List[type.TokenTfIdf], outputfile: str):
 
 
 write_to_file(
-    generate_tf_idf(read_files("output/resulat_tf.csv", "output/tf_idf.csv")),
-    "tfidf.csv",
+    generate_tf_idf(read_files(path.ALL_TF, path.ALL_IDF)),
+    path.ALL_TF_IDF,
 )

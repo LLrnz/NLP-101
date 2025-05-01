@@ -19,12 +19,9 @@ def substitues_to_dict(tsvSubstituesPath: str) -> Dict[str, str]:
     return replacement_dict
 
 
-print(substitues_to_dict("res/words_to_replace.csv"))
+def substitute_words(dictionary, text):
 
+    for key, value in dictionary.items():
+        text = text.replace(" " + key + " ", value)
 
-# def substitute_words(dictionary, text):
-
-#     for key, value in dictionary.items():
-#         text = text.replace(" " + key + " ", value)
-
-#     return text
+    return text
