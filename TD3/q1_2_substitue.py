@@ -1,5 +1,6 @@
 import csv
 from typing import Dict
+import utils.corpus_types as type
 
 """Remplacer les mots d'un texte à partir d'un fichier de correspondances"""
 
@@ -25,3 +26,22 @@ def substitute_words(dictionary, text):
         text = text.replace(" " + key + " ", value)
 
     return text
+
+
+def substitute_words(dictionary: Dict[str, str], token_list: type.Token) -> type.Tokens:
+    res = []
+    for token in token_list:
+        res.append(dictionary[token])
+
+    return res
+
+
+"""replace all words present in dict in given corpus (modifies corpus object)"""
+
+
+def substitue_corpus(
+    dictionary: Dict[str, str], tokenized_corpus: type.TokenizedCorpus
+):
+    for bulletin in tokenized_corpus:
+        for category, tokens in bulletin.items():
+            bulletin[category] = substitute_words(dictionary, tokens)
