@@ -11,3 +11,5 @@ ALL_IDF = "output/resultat_idf.csv"
 ALL_TF_IDF = "output/tf_idf.csv"
 
 XML_FILTERED_CORPUS = "output/filtered_corpus.xml"
+
+SPACY_LEMMAS = "output/spacy_lemmas.csv"
