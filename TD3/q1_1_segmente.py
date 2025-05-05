@@ -1,8 +1,10 @@
 import re
-from typing import Dict, List, Tuple
+from typing import List
 from bs4 import BeautifulSoup
 
-from file_handling import write_on_output_file
+import utils.file_handling as file
+import utils.corpus_types as type
+import utils.paths as path
 
 """Tokénisation"""
 
@@ -13,30 +15,27 @@ def read_corpus(corpusXMLFile: str) -> BeautifulSoup:
     return corpus
 
 
-def segment_corpus(corpus: BeautifulSoup) -> Tuple[str, List[Dict[str, List[str]]]]:
-    segementedCorpus = ""
+def segment_corpus(corpus: BeautifulSoup) -> type.TokenizedCorpus:
+
     token_list = []
     for i, bulletin in enumerate(corpus.find_all("bulletin")):
         token_list.append({})
-        filename = bulletin.find("fichier").text
 
-        texts = bulletin.find("titre").text
-        token_list[i]["titre"] = []
-        texts = clean_text(texts)
-        for word in texts.split(" "):
-            if word != "":
-                segementedCorpus += word + "	" + filename + "\n"
-                token_list[i]["titre"].append(word)
+        for category in bulletin.children:
+            if category is not None:
+                key = category.name
+                text = clean_text(category.text)
+                token_list[i][key] = split_text(text)
 
-        texts = bulletin.find("texte").text
-        token_list[i]["texte"] = []
-        texts = clean_text(texts)
-        for word in texts.split(" "):
-            if word != "":
-                segementedCorpus += word + "	" + filename + "\n"
-                token_list[i]["texte"].append(word)
+    return token_list
 
-    return segementedCorpus, token_list
+
+def split_text(text: str) -> type.Tokens:
+    token_list = []
+    for word in text.split(" "):
+        if word != "":
+            token_list.append(word)
+    return token_list
 
 
 def clean_text(text: str) -> str:
@@ -48,7 +47,25 @@ def clean_text(text: str) -> str:
     return text
 
 
-# fichier de sortie : tokens.csv
-write_on_output_file(
-    segment_corpus(read_corpus("output/corpus.xml"))[0], "output/tokens.csv"
-)
+def tokens_to_file(toknized_corpus: type.TokenizedCorpus) -> str:
+    segmented_corpus = ""
+
+    for bulletin in toknized_corpus:
+        fichier = bulletin["fichier"][0]
+        for _, tokens in bulletin.items():
+            for token in tokens:
+                segmented_corpus += token + "	" + fichier + "\n"
+
+    return segmented_corpus
+
+
+def unsplit(text: List[str]) -> str:
+    return " ".join(text)
+
+
+def detokenize(toknized_corpus: type.TokenizedCorpus) -> type.Corpus:
+    for bulletin in toknized_corpus:
+        for category, tokens in bulletin.items():
+            bulletin[category] = unsplit(tokens)
+
+    return toknized_corpus
