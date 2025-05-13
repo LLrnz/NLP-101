@@ -31,8 +31,7 @@ def substitute_words(dictionary, text):
 def substitute_words(dictionary: Dict[str, str], token_list: type.Token) -> type.Tokens:
     res = []
     for token in token_list:
-        res.append(dictionary[token])
-
+        res.append(dictionary.get(token,token)) # J'ai rajouté ceci car je pense que Si le mot n'est pas dans le dictionnaire, on le garde tel quel
     return res
 
 
