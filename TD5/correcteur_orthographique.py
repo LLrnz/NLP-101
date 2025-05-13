@@ -1,21 +1,26 @@
 import re
 
+
 def saisir_phrase():
     return input("Entrez une phrase : ")
 
+
 # 2.a : Extraction des mots et conversion en minuscules
+
 
 def extraire_mots(phrase):
     return re.findall(r"\b\w+\b", phrase.lower())
 
+
 # 2.b : Charger le lexique et associer directement un mot à son lemme
 def charger_lexique(nom_fichier):
     lexique = {}
-    with open(nom_fichier, 'r', encoding='utf-8') as f:
+    with open(nom_fichier, "r", encoding="utf-8") as f:
         for ligne in f:
             mot, lemme = ligne.strip().split()
             lexique[mot.lower()] = lemme.lower()
     return lexique
+
 
 # 2.c : Recherche de mots par préfixe commun
 def prefixe_commun(mot, lexique, min_prefixe=2):  # seuil configurable
@@ -54,6 +59,7 @@ def levenshtein(a, b):
         previous_row = current_row
     return previous_row[-1]
 
+
 # Étape 2.e : Si aucun mot n’est trouvé, indiquer que le mot est inconnu
 def corriger_mot(mot, lexique):
     candidats = prefixe_commun(mot, lexique, min_prefixe=2)  # ← seuil 2 lettres
@@ -75,14 +81,3 @@ def traiter_phrase(phrase, lexique):
         else:
             lemmes.append(corriger_mot(mot, lexique))  # 2.c → 2.d → 2.e
     return mots, lemmes
-
-
-def main():
-    lexique = charger_lexique("TD5/lexique.csv")
-    phrase = saisir_phrase()        
-    mots, lemmes = traiter_phrase(phrase, lexique)
-    for mot, lemme in zip(mots, lemmes):
-        print(f"{mot} → {lemme}")
-
-if __name__ == "__main__":
-    main()
