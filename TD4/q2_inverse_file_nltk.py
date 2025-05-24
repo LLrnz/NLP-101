@@ -5,7 +5,7 @@ from nltk.tokenize import word_tokenize
 
 nltk.download("punkt")
 
-# Charger le fichier XML racinisé ou lemmatisé
+# Charger le fichier XML racinisé ou lemmatise
 tree = ET.parse("output/corpus_filtered_substitued.xml")
 root = tree.getroot()
 

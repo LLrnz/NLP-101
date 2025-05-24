@@ -1,6 +1,9 @@
 import xml.etree.ElementTree as ET
 from nltk.stem.snowball import SnowballStemmer
 import nltk
+from typing import Dict
+import utils.corpus_types as type
+
 
 nltk.download('punkt_tab')  # Télécharge le tokenizer de NLTK
 # Initialisation du stemmer pour le français
@@ -29,7 +32,7 @@ with open("output/nltk.csv", "w", encoding="utf-8") as f:
     for mot, racine in mot_racine:
         f.write(f"{mot}\t{racine}\n")  # Écrit chaque mot et sa racine dans le fichier
 
-def process_xml(input_xml: str, output_xml: str, dictionary: Dict[str, str]):
+    #def process_xml(input_xml: str, output_xml: str, dictionary: Dict[str, str]):
     """Reads an XML file, substitutes words, and writes the updated XML to a new file."""
     tree = ET.parse(input_xml)
     root = tree.getroot()
@@ -48,6 +51,9 @@ def process_xml(input_xml: str, output_xml: str, dictionary: Dict[str, str]):
     # Write the updated XML to the output file
     tree.write(output_xml, encoding="utf-8", xml_declaration=True)
 
+  
+    # Write the updated XML to the output file
+    tree.write(output_xml, encoding="utf-8", xml_declaration=True)
 
 if __name__ == "__main__":
     # Input files
