@@ -6,12 +6,12 @@ from TD3.conclu_filter_corpus_without_stop_words import (
 )
 from TD3.q1_1_segmente import read_corpus, segment_corpus
 
-# tokenized_corpus = segment_corpus(read_corpus("output/corpus.xml"))
+tokenized_corpus = segment_corpus(read_corpus("output/corpus.xml"))
 
-tokenized_corpus = remove_stop_word(
-    segment_corpus(read_corpus("output/corpus.xml")),
-    make_stop_word_dictionnary("output/tf_idf.csv", 1.2),
-)
+# tokenized_corpus = remove_stop_word(
+#     segment_corpus(read_corpus("output/corpus.xml")),
+#     make_stop_word_dictionnary("output/tf_idf.csv", 1.2),
+# )
 
 glossaire = []
 for b in tokenized_corpus:
@@ -29,10 +29,11 @@ str_glossaire += '"'
 grammar = CFG.fromstring(
     """
 R -> RECHERCHE CDTS
-RECHERCHE -> SUJET VERBE UNK_RECHERCHE
+RECHERCHE -> SUJET VERBE UNK_RECHERCHE | QUESTION VERBE UNK_RECHERCHE | QUESTION UNK_RECHERCHE VERBE | VERBE UNK_RECHERCHE
 SUJET -> 'je'
-VERBE -> 'chercher'
-UNK_RECHERCHE -> 'article'
+VERBE -> 'chercher' | 'être' | 'afficher' | 'vouloir'
+QUESTION -> 'quels' | 'dans quels'
+UNK_RECHERCHE -> 'les' 'article' | 'les' 'rubrique' | 'article' | 'rubrique'
 CDTS -> CDT ET CDTS | CDT OU CDTS | CDT CDTS | CDT
 CDT -> TITRE | DATE | RUBRIQUE | THEME | MOT
 
@@ -54,23 +55,24 @@ VBMOT -> TERMMOT
 TERMMOT -> 'contenir'
 POSTMOT ->  'être' 'citer'
 MOTS -> UNK_MOT ET MOTS | UNK_MOT OU MOTS | UNK_MOT ETNON MOTS | UNK_MOT
-UNK_MOT -> NOM | BIMOT
-BIMOT -> NOM NOM | NOM 'de' 'le' NOM | NOM 'de' 'la' NOM | NOM 'de' NOM | NOM 'du' NOM
+UNK_MOT -> BIMOT
+BIMOT -> PREPNOM BIMOT | PREPNOM
 
 PRENEG -> 'ne'
 POSTNEG -> 'pas'
 
 THEME -> TERMTHEME THEMES 
-TERMTHEME -> 'évoquer' | 'qui' 'parler' 'de'
+TERMTHEME -> 'évoquer' | 'qui' 'parler' | 'parler'
 THEMES -> UNK_THEME ET THEMES | UNK_THEME OU THEMES | UNK_THEME ETNON THEMES | UNK_THEME
-UNK_THEME -> NOM
+UNK_THEME -> BIMOT
+PREPNOM -> 'de' 'le' NOM | 'de' 'la' NOM | 'de' NOM | 'du' NOM | 'd' NOM | NOM
 
 NOM -> """
     + str_glossaire
     + """
 ET -> 'et'
 OU -> 'ou'
-ETNON -> 'mais' 'pas' 'de' | 'mais' 'pas' | 'et' 'pas' 'de' | 'ni'
+ETNON -> 'mais' 'pas' | 'et' 'pas' | 'ni'
 
 DATE -> TERMDATE CDTDATE
 TERMDATE -> 'publier'
@@ -82,9 +84,7 @@ AVANT -> '2021'
 )
 
 parser = ChartParser(grammar)
-tokens = (
-    "je chercher article contenir médecine moléculaire mais pas électricité".split()
-)
+tokens = "je vouloir les article qui parler d airbus ou du projet taxibot".split()
 print(tokens)
 trees = list(parser.parse(tokens))
 
