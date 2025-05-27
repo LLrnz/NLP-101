@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from word_substitute_to_dict import substitues_to_dict
+from TD3.q1_2_substitue import substitues_to_dict
 
 
 def test_substitues_to_dict():

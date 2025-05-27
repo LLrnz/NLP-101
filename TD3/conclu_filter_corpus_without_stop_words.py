@@ -27,16 +27,16 @@ def make_stop_word_dictionnary(tfidf_file: str, threshold: float) -> Dict[str, s
 def remove_stop_word(
     tokenized_corpus: type.TokenizedCorpus, stopwords: List[str]
 ) -> type.TokenizedCorpus:
-    new_corpus = []
 
     for i, b in enumerate(tokenized_corpus):
-        new_corpus.append({})
-        for category, token_list in b.items():
+
+        for category in ["titre", "texte"]:
+            token_list = b[category]
             for stop_word in stopwords:
                 token_list = list(filter(lambda word: word != stop_word, token_list))
-            new_corpus[i][category] = token_list
+            tokenized_corpus[i][category] = token_list
 
-    return new_corpus
+    return tokenized_corpus
 
 
 def reform_corpus(tokenized_corpus: type.TokenizedCorpus, outputfile: str) -> str:

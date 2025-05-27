@@ -37,3 +37,9 @@ IdfDict = Dict[Token, Idf]
 
 TokenTfIdf = Tuple[DocID, Token, TfIdf]
 """Tuple of DocID, Token and TfIdf"""
+
+TokenPositionII = Dict[Token, Dict[DocID, List[int]]]
+
+DateII = List[Tuple[int, List[DocID]]]
+
+ImageII = Dict[bool, List[DocID]]

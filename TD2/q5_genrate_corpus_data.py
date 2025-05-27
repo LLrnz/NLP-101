@@ -8,7 +8,6 @@ from TD2.q3_html_scrapper import (
 import utils.corpus_types as type
 
 
-# TODO formaliser type de sortie
 def generate_corpus_data(bulletinDir: str) -> type.Corpus:
     bulletins = parseAllHTML(bulletinDir)
     corpus = []
