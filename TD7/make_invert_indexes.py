@@ -1,11 +1,7 @@
 from datetime import date
 from typing import List, Set
 from TD3.q1_1_segmente import segment_text
-from utils.corpus_types import DateII, DocID, ImageII, TokenPositionII
-
-AVANT = 0
-APRES = 1
-PILE = 2
+from utils.corpus_types import DateII, DocID, ImageII, SectionII, TokenPositionII
 
 
 def make_category_II(corpus, category) -> TokenPositionII:
@@ -14,7 +10,7 @@ def make_category_II(corpus, category) -> TokenPositionII:
     for bulletin in corpus:
         for i, token in enumerate(segment_text(bulletin[category])):
             res[token][bulletin["fichier"]].append(i)
-    return res
+    return set(res)
 
 
 def make_category_tokenised_II(tokenised_corpus, category) -> TokenPositionII:
@@ -27,10 +23,30 @@ def make_category_tokenised_II(tokenised_corpus, category) -> TokenPositionII:
             if bulletin["fichier"][0] not in res[token].keys():
                 res[token][bulletin["fichier"][0]] = []
             res[token][bulletin["fichier"][0]].append(i)
-    return res
+    return set(res)
 
 
-def querry_bimot_II(mot1, mot2, positionII) -> List[DocID]:
+def make_categories_tokenised_II(tokenised_corpus, categories) -> TokenPositionII:
+    res = {}
+
+    for bulletin in tokenised_corpus:
+        for c in categories:
+            for i, token in enumerate(bulletin[c]):
+                if token not in res.keys():
+                    res[token] = {}
+                if bulletin["fichier"][0] not in res[token].keys():
+                    res[token][bulletin["fichier"][0]] = []
+                res[token][bulletin["fichier"][0]].append(i)
+    return set(res)
+
+
+def query_mot_II(mot, positionII) -> Set[DocID]:
+    # TODO check si dans le dict
+
+    return set(positionII[mot].keys())
+
+
+def querry_bimot_II(mot1, mot2, positionII) -> Set[DocID]:
     # TODO check si mot dans le dict
     positions_mot1 = positionII[mot1]
     positions_mot2 = positionII[mot2]
@@ -44,7 +60,7 @@ def querry_bimot_II(mot1, mot2, positionII) -> List[DocID]:
                 for p2 in positions_mot2[docid]:
                     if p1 == p2 - 1:
                         res.append(docid)
-    return res
+    return set(res)
 
 
 def make_date_II(corpus) -> DateII:
@@ -63,10 +79,10 @@ def make_date_II(corpus) -> DateII:
         res.append((date_str, docs))
 
     res.sort(key=lambda x: x[0])
-    return res
+    return set(res)
 
 
-def query_date_II(date_inf, date_sup, dateII) -> set[DocID]:
+def query_date_II(dateII, date_inf=date.min, date_sup=date.max) -> set[DocID]:
     indexes = [0, 0]
     bests = [dateII[0][0], dateII[-1][0]]
 
@@ -89,7 +105,7 @@ def query_date_II(date_inf, date_sup, dateII) -> set[DocID]:
         for doc in docs:
             res.append(doc[0])
 
-    return res
+    return set(res)
 
 
 def make_image_II(corpus) -> ImageII:
@@ -105,3 +121,16 @@ def make_image_II(corpus) -> ImageII:
 
 def query_image_II(has_image: bool, ii: ImageII) -> Set[DocID]:
     return set(ii[has_image])
+
+
+def make_section_II(corpus) -> SectionII:
+    res = []
+    for bulletin in corpus:
+        res.append("".join(bulletin["rubrique"]))
+    return res
+
+
+def query_section_II(rubrique, ii: SectionII) -> Set[DocID]:
+    if rubrique is not str:
+        rubrique = " ".join(rubrique)
+    return set(ii[rubrique])
