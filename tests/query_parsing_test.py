@@ -41,7 +41,7 @@ def test_grammar():
         "quels sont les articles publiés au _DATE_ portant sur de la recherche.",
         "je veux des articles sur la plasturgie.",
         "quels articles portent à la fois sur les nanotechnologies et les microsatellites.",
-        "je voudrais les articles liés à la recherche scientifique publiés en Février 2010.",
+        "je voudrais les articles liés à la recherche scientifique publiés en _date_.",
         "Donner les articles qui parlent d’apprentissage et de la rubrique _RUBRIQUE_.",
         "Chercher les articles dans le domaine industriel et datés à partir de _DATE_.",
         "Nous souhaitons obtenir les articles du _DATE_ et parlant du cerveau.",
