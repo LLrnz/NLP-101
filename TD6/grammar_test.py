@@ -197,7 +197,7 @@ def gen_grammar(tokenized_corpus):
     VBTH -> TERMTHEME
     TERMTHEME -> 'évoquent' | 'parlent' | 'traitent' | 'évoquant' | 'parlant' | 'traitant' | 'portant' | 'portent' | 'liés' | 'sur' | 'traite' | 'parle' | 'à' 'propos' | 'évoque' | 'impliquant' | 'liés' 'à'
     UNK_THEME -> BIMOT
-    BIMOT -> PREPNOM BIMOT | PREPNOM
+    BIMOT -> PREPNOM | PREPNOM NOM
     PREPNOM -> 'sur' PREP NOM | 'sur' NOM | NOM | PREP NOM
     PREP -> 'le' | 'la' | 'les' | 'du' | 'des' | 'd' | 'de' 'la' | 'de' | 'l' | 'de' 'l' | 'en'
     
@@ -224,7 +224,7 @@ def gen_grammar(tokenized_corpus):
     IMG -> 'image' | 'des' 'images'
     PREIMAGE -> 'avec'
 
-    SUB -> BIMOT
+    SUB -> OU BIMOT | ET BIMOT | NOM NOM | PREPNOM
 
     """
     )
