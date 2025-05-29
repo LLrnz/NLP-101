@@ -30,6 +30,11 @@ def segment_corpus(corpus: BeautifulSoup) -> type.TokenizedCorpus:
     return token_list
 
 
+def segment_text(str) -> type.Tokens:
+    text = clean_text(str)
+    return split_text(text)
+
+
 def split_text(text: str) -> type.Tokens:
     token_list = []
     for word in text.split(" "):
