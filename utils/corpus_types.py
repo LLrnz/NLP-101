@@ -21,6 +21,7 @@ ACTION = Enum(
         ("SECTION", 6),
         ("AVANT", 7),
         ("APRES", 8),
+        ("PILE", 9),
     ],
 )
 LOGIC = Enum("logic", [("AND", 1), ("OR", 2), ("NOT", 3), ("BASE", 4)])

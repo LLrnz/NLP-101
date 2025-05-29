@@ -10,7 +10,7 @@ def make_category_II(corpus, category) -> TokenPositionII:
     for bulletin in corpus:
         for i, token in enumerate(segment_text(bulletin[category])):
             res[token][bulletin["fichier"]].append(i)
-    return set(res)
+    return res
 
 
 def make_category_tokenised_II(tokenised_corpus, category) -> TokenPositionII:
@@ -23,7 +23,7 @@ def make_category_tokenised_II(tokenised_corpus, category) -> TokenPositionII:
             if bulletin["fichier"][0] not in res[token].keys():
                 res[token][bulletin["fichier"][0]] = []
             res[token][bulletin["fichier"][0]].append(i)
-    return set(res)
+    return res
 
 
 def make_categories_tokenised_II(tokenised_corpus, categories) -> TokenPositionII:
@@ -79,7 +79,7 @@ def make_date_II(corpus) -> DateII:
         res.append((date_str, docs))
 
     res.sort(key=lambda x: x[0])
-    return set(res)
+    return res
 
 
 def query_date_II(dateII, date_inf=date.min, date_sup=date.max) -> set[DocID]:
@@ -111,10 +111,10 @@ def query_date_II(dateII, date_inf=date.min, date_sup=date.max) -> set[DocID]:
 def make_image_II(corpus) -> ImageII:
     res = {True: [], False: []}
     for bulletin in corpus:
-        if bulletin["images"] != {}:
-            res[True].append(bulletin["fichier"])
+        if bulletin["images"] != []:
+            res[True].append(bulletin["fichier"][0])
         else:
-            res[False].append(bulletin["fichier"])
+            res[False].append(bulletin["fichier"][0])
 
     return res
 

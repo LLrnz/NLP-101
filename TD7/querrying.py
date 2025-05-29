@@ -22,11 +22,11 @@ def generates_all_inverted_indexes(
     filtered_corpus = remove_stop_word(tokenised_corpus, stop_word_dict)
     stemmed_corpus = []  # spacy corpus
 
-    res[ACTION.THEME] = make_categories_tokenised_II(stemmed_corpus, ["theme", "tire"])
-    res[ACTION.SECTION] = make_section_II(tokenised_corpus, "rubrique")
+    res[ACTION.THEME] = make_categories_tokenised_II(stemmed_corpus, ["texte", "titre"])
+    res[ACTION.SECTION] = make_section_II(tokenised_corpus)
     res[ACTION.DATE] = make_date_II(tokenised_corpus)
     res[ACTION.TITLE] = make_category_tokenised_II(filtered_corpus, "titre")
-    res[ACTION.EXACT_WORD] = make_category_tokenised_II(tokenised_corpus)
+    res[ACTION.EXACT_WORD] = make_category_tokenised_II(tokenised_corpus, "texte")
     res[ACTION.HAS_IMAGE] = make_image_II(tokenised_corpus)
 
     return res
@@ -35,7 +35,7 @@ def generates_all_inverted_indexes(
 def query_word(query: SubQuery, IIs) -> Set[DocID]:
     II = IIs[ACTION.EXACT_WORD]
 
-    if len(SubQuery) >= 3:
+    if len(query) >= 3:
         res = querry_bimot_II(query[1], query[2], II)
     else:
         res = query_mot_II(query[1], II)
@@ -45,7 +45,7 @@ def query_word(query: SubQuery, IIs) -> Set[DocID]:
 def query_theme(query: SubQuery, IIs) -> Set[DocID]:
     II = IIs[ACTION.THEME]
 
-    if len(SubQuery) >= 3:
+    if len(query) >= 3:
         res = querry_bimot_II(query[1], query[2], II)
     else:
         res = query_mot_II(query[1], II)
@@ -55,7 +55,7 @@ def query_theme(query: SubQuery, IIs) -> Set[DocID]:
 def query_title(query: SubQuery, IIs) -> Set[DocID]:
     II = IIs[ACTION.TITLE]
 
-    if len(SubQuery) >= 3:
+    if len(query) >= 3:
         res = querry_bimot_II(query[1], query[2], II)
     else:
         res = query_mot_II(query[1], II)
@@ -73,6 +73,7 @@ def query_date_before(query: SubQuery, IIs) -> Set[DocID]:
     II = IIs[ACTION.DATE]
 
     res = query_date_II(II, date_sup=query[1])
+    return res
 
 
 def query_date_afer(query: SubQuery, IIs) -> Set[DocID]:
@@ -115,16 +116,30 @@ def execute_logic(
 ) -> set[DocID]:
     match (operator):
         case LOGIC.AND:
-            return set1.intersection(set2)
+            if len(set1) >= 1:
+                return set1.intersection(set2)
+            else:
+                return set2
         case LOGIC.OR:
-            return set1.union(set2)
+            if len(set1) >= 1:
+                return set1.union(set2)
+            else:
+                return set2
         case LOGIC.BASE:
-            return set1
+            return set2
+
+
+def get_all_docs_set(corpus) -> Set[DocID]:
+    res = []
+    for bulletin in corpus:
+        res.append(bulletin["fichier"][0])
+
+    return set(res)
 
 
 def apply_querry(query: Query, inverted_indexes, doc_set) -> Set[DocID]:
     res = ()
     for q in query:
-        docIDs = execute_subquery(q, inverted_indexes)
+        docIDs = execute_subquery(q[1], inverted_indexes)
         res = execute_logic(doc_set, q[0], res, docIDs)
     return res

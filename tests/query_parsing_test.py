@@ -1,6 +1,6 @@
 from TD3.q1_1_segmente import clean_text, read_corpus, segment_corpus, split_text
 from TD6.grammar_test import gen_grammar, is_parsable
-from TD6.query_parser import extract_query_conditions, parse_query
+from TD6.query_parser import translate_grammar_tree, parse_query
 
 
 def test_tree():
@@ -9,10 +9,9 @@ def test_tree():
 
     tree = parse_query(
         grammar,
-        "afficher la liste des articles qui parlent des systèmes embarqués ou de cuisine et dont le titre contient paris",
+        "afficher la liste des articles qui parlent des systèmes embarqués ou de cuisine en 2013",
     )
     print(tree)
-    print(extract_query_conditions(tree[0]))
 
 
 def test_grammar():
