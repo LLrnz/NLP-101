@@ -1,8 +1,10 @@
 # import nltk
 
 
+from datetime import date, datetime
+from typing import List
 from TD3.q1_1_segmente import clean_text, split_text
-from TD6.date_finder import replace_dates
+from TD6.date_finder import find_begin_end, replace_dates
 from TD6.grammar_test import make_tree
 from utils.corpus_types import ACTION, LOGIC
 from nltk.tree import Tree
@@ -13,11 +15,13 @@ def parse_query(grammar, str):
     query, dates = replace_dates(query)
     query = split_text(query)
     tree = make_tree(grammar, query)
+    dates.reverse()
+    res = translate_grammar_tree(tree[0], dates)
 
-    return tree
+    return res
 
 
-def translate_grammar_tree(tree: Tree):
+def translate_grammar_tree(tree: Tree, reversed_date_list):
     logic_chain = []
     base_action = None
     last_action = None
@@ -39,7 +43,7 @@ def translate_grammar_tree(tree: Tree):
                 terms.extend(subtree.leaves())
         return terms
 
-    def recursive_parse(node: Tree):
+    def recursive_parse(node: Tree, date_list: List[date]):
         nonlocal base_action, last_action, first_condition
 
         if node.label() == "RECHERCHE":
@@ -88,7 +92,22 @@ def translate_grammar_tree(tree: Tree):
                         "PILE": ACTION.PILE,
                     }[subtree.label()]
                     logic_type = LOGIC.BASE if first_condition else LOGIC.AND
-                    logic_chain.append((logic_type, (action_type, date)))
+
+                    if action_type == ACTION.PILE:
+                        begin, end = find_begin_end(date_list.pop())
+                        logic_chain.append((logic_type, (ACTION.AVANT, end)))
+                        logic_chain.append((logic_type, (ACTION.APRES, begin)))
+
+                    else:
+                        logic_chain.append(
+                            (
+                                logic_type,
+                                (
+                                    action_type,
+                                    datetime.strptime(date_list.pop(), "dd/mm/YYYY"),
+                                ),
+                            )
+                        )
                     first_condition = False
                     last_action = action_type
 
@@ -105,16 +124,16 @@ def translate_grammar_tree(tree: Tree):
 
         elif node.label() == "CDTS":
             for child in node:
-                recursive_parse(child)
+                recursive_parse(child, date_list)
 
         elif node.label() == "CDT":
             for child in node:
-                recursive_parse(child)
+                recursive_parse(child, date_list)
 
         else:
             for child in node:
                 if isinstance(child, Tree):
-                    recursive_parse(child)
+                    recursive_parse(child, date_list)
 
-    recursive_parse(tree)
+    recursive_parse(tree, reversed_date_list)
     return logic_chain

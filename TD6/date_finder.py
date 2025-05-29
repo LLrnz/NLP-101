@@ -1,3 +1,4 @@
+from datetime import date, datetime
 import re
 
 
@@ -38,7 +39,7 @@ def replace_dates(text):
         (
             r"\b (\d{4})",
             lambda m: f"00/00/{m.group(1)}",
-        ),  # catch standalone years like "en 2025"
+        ),
     ]
 
     found_dates = []
@@ -56,7 +57,19 @@ def replace_dates(text):
     return modified_text, found_dates
 
 
-# Exemple d'utilisation
-text = "les nouvelles du 21/05/2024 rappellent les évènements du mois d'août 2020"
-result = replace_dates(text)
-print(result)
+def find_begin_end(pile: date):
+    begin = date.min
+    end = date.max
+    if pile[3] == "0" and pile[4] == "0":
+        begin = date(int(pile[6:10]), 1, 1)
+        end = date(int(pile[6:10]), 12, 31)
+
+    elif pile[0] == "0" and pile[1] == "0":
+        begin = date(int(pile[6:10]), int(pile[3:5]), 1)
+        end = date(int(pile[6:10]), int(pile[3:5]), 31)
+
+    else:
+        begin = pile
+        end = pile
+
+    return (begin, end)
